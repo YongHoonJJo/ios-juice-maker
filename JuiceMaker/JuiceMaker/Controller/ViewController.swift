@@ -24,6 +24,8 @@ class ViewController: UIViewController {
     @IBOutlet weak var kiwiLabel: UILabel!
     @IBOutlet weak var mangoLabel: UILabel!
     
+    var vc: UIViewController!
+    
     // MARK: - Method
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,6 +33,9 @@ class ViewController: UIViewController {
         juiceMaker = JuiceMaker(fruitStore: fruitStore)
         initLabelList()
         initLabelsText(of: fruitStore)
+        
+        vc = self.storyboard!.instantiateViewController(withIdentifier: "StockManager")
+        
     }
     
     func initLabelList() {
@@ -65,8 +70,25 @@ class ViewController: UIViewController {
         present(alert, animated: true, completion: nil)
     }
     
+    func showConfirm(title: String?, message: String?) {
+        let alert = UIAlertController(title: title,
+                                      message: message,
+                                      preferredStyle: .alert)
+        let yesAction = UIAlertAction(title: "예", style: .default, handler: <#T##((UIAlertAction) -> Void)?##((UIAlertAction) -> Void)?##(UIAlertAction) -> Void#>)
+        let noAction = UIAlertAction(title: "아니오", style: .cancel)
+        
+        alert.addAction(yesAction)
+        alert.addAction(noAction)
+        present(alert, animated: true, completion: nil)
+    }
+    
     func orderJuice(of juice: Juice) {
-        showAlert(title: "주문완료", message: "\(juice) 쥬스 나왔습니다! 맛있게 드세요!")
+        do {
+            try juiceMaker.makeJuice(juice: juice)
+            showAlert(title: "주문완료", message: "\(juice) 쥬스 나왔습니다! 맛있게 드세요!")
+        } catch {
+            
+        }
     }
     
     // MARK: - IBAction

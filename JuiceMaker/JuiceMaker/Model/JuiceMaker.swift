@@ -22,21 +22,17 @@ struct JuiceMaker {
         self.fruitStore = fruitStore
     }
     
-    func makeJuice(juice: Juice) {
-        do {
-            let juiceRecipes = juice.recipe
+    func makeJuice(juice: Juice) throws {
+        let juiceRecipes = juice.recipe
 
-            for juiceRecipe in juiceRecipes {
-                guard try fruitStore.hasEnoughStock(of: juiceRecipe) else {
-                    print(Message.outOfStock)
-                    return
-                }
+        for juiceRecipe in juiceRecipes {
+            guard try fruitStore.hasEnoughStock(of: juiceRecipe) else {
+                print(Message.outOfStock)
+                return
             }
-            
-            try fruitStore.useStocks(with: juiceRecipes)
-            Message.completeMakingJuice(on: juice)
-        } catch {
-            print("JuiceMakerError")
         }
+        
+        try fruitStore.useStocks(with: juiceRecipes)
+        Message.completeMakingJuice(on: juice)
     }
 }
